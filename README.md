@@ -1,6 +1,6 @@
 # exchange_books
 
-ExchangeBooks - created by Simone Pio Caronua
+ExchangeBooks - created by Simone Pio Caronia
 
 ## Getting Started
 
