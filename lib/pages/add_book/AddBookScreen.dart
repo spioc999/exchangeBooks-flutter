@@ -4,6 +4,7 @@ import 'package:exchange_books/helpers/ImageHelper.dart';
 import 'package:exchange_books/pages/add_book/AddBookViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
 import 'package:exchange_books/values/AppStyles.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/AppHeader.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
@@ -56,6 +57,7 @@ class _AddBookScreenState extends State<AddBookScreen> with WidgetsBindingObserv
                   Expanded(
                     flex: 13,
                     child: TextFormField(
+                      key: ValueKey(ExchangeBooksValueKey.isbnTextFieldAddBook),
                       autocorrect: false,
                       controller: viewModel.isbnController,
                       style: AppStyles.blackTextStyle,
@@ -69,6 +71,11 @@ class _AddBookScreenState extends State<AddBookScreen> with WidgetsBindingObserv
                         viewModel.getInfoBook(context);
                       },
                       decoration: InputDecoration(
+                          suffixIcon: InkWell(child: Icon(Icons.navigate_next, color: AppColors.appBlue,), key: ValueKey(ExchangeBooksValueKey.nextButtonAddBook), onTap: () {
+                            FocusScope.of(context).unfocus();
+                            viewModel.checkIsbnLength();
+                            viewModel.getInfoBook(context);
+                          },),
                           errorStyle: AppStyles.errorTextStyle,
                           errorText: viewModel.errorIsbn ? (viewModel.errorHttpIsbn ? Strings.errorHttpIsbnText : Strings.errorIsbnText) : null,
                           focusColor: AppColors.appBlue,
@@ -95,7 +102,7 @@ class _AddBookScreenState extends State<AddBookScreen> with WidgetsBindingObserv
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: ImageHelper.getSvg("barcode-scanner", height: 40, color: AppColors.appBlue),
+                        child: ImageHelper.getSvg("barcode-scanner", height: 40, color: AppColors.appBlue, key: ValueKey(ExchangeBooksValueKey.scanBarCodeButtonAddBook)),
                       ),
                     )
                   )
@@ -134,6 +141,7 @@ class _AddBookScreenState extends State<AddBookScreen> with WidgetsBindingObserv
                     TextFormField(
                       autocorrect: false,
                       controller: viewModel.notesController,
+                      key: ValueKey(ExchangeBooksValueKey.notesTextFieldAddBook),
                       style: AppStyles.blackTextStyle,
                       /*buildCounter: (BuildContext context, { int currentLength, int maxLength, bool isFocused }) => null,
                       maxLength: 13,*/
@@ -159,6 +167,7 @@ class _AddBookScreenState extends State<AddBookScreen> with WidgetsBindingObserv
                       onTap: () => FocusScope.of(context).requestFocus(new FocusScopeNode()),
                     ),
                     AppButton(
+                      key: ValueKey(ExchangeBooksValueKey.addButtonAddBook),
                       enabled: viewModel.isValidNote(),
                       text: Strings.add,
                       onPressed: (){

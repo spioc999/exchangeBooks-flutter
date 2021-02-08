@@ -3,6 +3,7 @@ import 'package:exchange_books/helpers/DateHelper.dart';
 import 'package:exchange_books/helpers/ImageHelper.dart';
 import 'package:exchange_books/pages/details_book/DetailsBookViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/AppHeader.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
@@ -151,6 +152,7 @@ class _DetailsBookScreenState extends State<DetailsBookScreen> with WidgetsBindi
                             ),
                             SizedBox(height: 30,),
                             AppIconButton(
+                              key: ValueKey(ExchangeBooksValueKey.contactButtonDetails),
                               text: Strings.contact + " " + viewModel.model.firstName,
                               icon: Icons.email_outlined,
                               small: true,
@@ -179,6 +181,7 @@ class _DetailsBookScreenState extends State<DetailsBookScreen> with WidgetsBindi
                         Expanded(
                           flex: 10,
                           child: AppIconButton(
+                            key: ValueKey(ExchangeBooksValueKey.editButtonDetails),
                             text: Strings.editStatus,
                             icon: Icons.edit_outlined,
                             onPressed: () => viewModel.onEditClicked(context),
@@ -189,6 +192,7 @@ class _DetailsBookScreenState extends State<DetailsBookScreen> with WidgetsBindi
                         Expanded(
                           flex: 10,
                           child: AppIconButton(
+                            key: ValueKey(ExchangeBooksValueKey.deleteButtonDetails),
                             text: Strings.deleteInsertion,
                             icon: Icons.delete_outline,
                             onPressed: () => viewModel.onDeleteClicked(context),

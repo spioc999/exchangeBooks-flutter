@@ -23,7 +23,7 @@ class MyBookListItem extends StatelessWidget {
   final VoidCallback _onClick;
 
 
-  MyBookListItem(this._model, this._onClick);
+  MyBookListItem(this._model, this._onClick, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

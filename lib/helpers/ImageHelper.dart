@@ -7,7 +7,7 @@ class ImageHelper{
       {double width,
         double height,
         BoxFit fit = BoxFit.contain,
-        Alignment alignment = Alignment.center}){
+        Alignment alignment = Alignment.center, Key key}){
     String assetPath = "assets/images/$image.png";
 
     return Image.asset(
@@ -16,6 +16,7 @@ class ImageHelper{
       height: height,
       fit: fit,
       alignment: alignment,
+      key: key,
     );
   }
 
@@ -24,7 +25,7 @@ class ImageHelper{
         double height,
         Color color,
         BoxFit fit = BoxFit.contain,
-        Alignment alignment = Alignment.center}){
+        Alignment alignment = Alignment.center, Key key}){
 
     String assetPath = "assets/svg/$image.svg";
 
@@ -35,6 +36,7 @@ class ImageHelper{
         height: height,
         fit: fit,
         alignment: alignment,
+        key: key,
     );
 
   }

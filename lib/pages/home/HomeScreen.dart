@@ -4,6 +4,7 @@ import 'package:exchange_books/helpers/ImageHelper.dart';
 import 'package:exchange_books/pages/home/HomeViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
 import 'package:exchange_books/values/AppStyles.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/AppHeader.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       safeAreaTop: true,
       safeAreaBottom: true,
       floatingActionButton: FloatingActionButton(
+        key: ValueKey(ExchangeBooksValueKey.addButtonHome),
         backgroundColor: AppColors.appBlue,
         onPressed: () {
           viewModel.onPressAdd();
@@ -62,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
               context: context,
               builder: (context) {
                 return Container(
+                  key: ValueKey(ExchangeBooksValueKey.infoBottomSheetHome),
                   color: Colors.white,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -87,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
           );
         },
         rightWidget: OutlineAppHeaderIconButton(
+          key: ValueKey(ExchangeBooksValueKey.userButtonHome),
           text: viewModel.name ?? '',
           small: true,
           onPressed: () => viewModel.onPressUser(),
@@ -106,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
               RegularText(Strings.province + " " + (viewModel.province ?? ""), fontSize: 15,),
               SizedBox(height: 20,),
               TextFormField(
+                key: ValueKey(ExchangeBooksValueKey.searchHome),
                 autocorrect: false,
                 controller: viewModel.searchController,
                 style: AppStyles.blackTextStyle,
@@ -141,6 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
   Widget _buildBooksList() {
     if(viewModel.filteredBooks != null && viewModel.filteredBooks.isNotEmpty){
       return ListView.builder(
+          key: ValueKey(ExchangeBooksValueKey.bookListHome),
           physics: AlwaysScrollableScrollPhysics(),
           //shrinkWrap: true,
           itemCount: viewModel.filteredBooks.length,
@@ -155,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
               isbn: viewModel.filteredBooks[index].isbn
             );
 
-            return BookListItem(model, () => viewModel.onClickBook(index));
+            return BookListItem(model, () => viewModel.onClickBook(index), key: ValueKey(ExchangeBooksValueKey.bookHome + "_$index"),);
 
           },);
     }else{

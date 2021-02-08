@@ -1,6 +1,7 @@
 import 'package:exchange_books/base/BaseWidget.dart';
 import 'package:exchange_books/pages/user/UserViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/AppHeader.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
@@ -43,6 +44,7 @@ class _UserScreenState extends State<UserScreen> with WidgetsBindingObserver{
       color: Colors.white,
       header: AppHeader(
         rightWidget: OutlineAppHeaderIconButton(
+          key: ValueKey(ExchangeBooksValueKey.logoutUser),
           text: Strings.logout,
           iconData: Icons.login_outlined,
           small: true,
@@ -175,7 +177,7 @@ class _UserScreenState extends State<UserScreen> with WidgetsBindingObserver{
               insertionDate: viewModel.myBooks[index].dateInsertion
           );
 
-          return MyBookListItem(model, () => viewModel.onClickBook(index, context));
+          return MyBookListItem(model, () => viewModel.onClickBook(index, context), key: ValueKey(ExchangeBooksValueKey.bookItemUser + "_$index"),);
 
         },);
     }else{

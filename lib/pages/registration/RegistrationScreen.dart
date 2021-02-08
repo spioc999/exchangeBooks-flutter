@@ -4,6 +4,7 @@ import 'package:exchange_books/base/BaseWidget.dart';
 import 'package:exchange_books/pages/registration/RegistrationViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
 import 'package:exchange_books/values/AppStyles.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/AppHeader.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
@@ -47,7 +48,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
   @override
   Widget build(BuildContext context) {
 
-    GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: AppConfig.of(context).googleApiKey);
+    //GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: AppConfig.of(context).googleApiKey);
 
     viewModel = Provider.of<RegistrationViewModel>(context);
 
@@ -73,6 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   BoldText(Strings.registrationTitle, fontSize: 25,),
                   SizedBox(height: 25,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.firstNameTextFieldRegister),
                     autocorrect: false,
                     controller: viewModel.firstNameController,
                     style: AppStyles.blackTextStyle,
@@ -91,6 +93,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 13,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.lastNameTextFieldRegister),
                     autocorrect: false,
                     controller: viewModel.lastNameController,
                     style: AppStyles.blackTextStyle,
@@ -109,6 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 13,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.usernameTextFieldRegister),
                     autocorrect: false,
                     controller: viewModel.usernameController,
                     style: AppStyles.blackTextStyle,
@@ -129,6 +133,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 13,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.emailTextFieldRegister),
                     autocorrect: false,
                     controller: viewModel.emailController,
                     style: AppStyles.blackTextStyle,
@@ -149,6 +154,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 13,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.passwordTextFieldRegister),
                     controller: viewModel.pswController,
                     obscureText: viewModel.obscurePassword,
                     textInputAction: TextInputAction.next,
@@ -174,6 +180,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 13,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.repeatPasswordTextFieldRegister),
                     controller: viewModel.repeatPswController,
                     obscureText: viewModel.obscureRepeatPassword,
                     textInputAction: TextInputAction.next,
@@ -203,13 +210,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                     child: RegularText(Strings.suggestionPassword, fontSize: 14,),
                   ),
                   SizedBox(height: 13,),
-                  GestureDetector(
+                  /*GestureDetector(
+                    key: ValueKey(ExchangeBooksValueKey.cityTextFieldRegister),
                     onTap: () => viewModel.showPlaces(context),
-                    child: TextFormField(
+                    child: */TextFormField(
                       autocorrect: false,
-                      enabled: false,
+                      key: ValueKey(ExchangeBooksValueKey.cityTextFieldRegister),
+                      textInputAction: TextInputAction.next,
+                      onEditingComplete: () => _node.nextFocus(),
+                      //enabled: false,
                       controller: viewModel.cityController,
                       style: AppStyles.blackTextStyle,
+                      onChanged: (newValue) {
+                        viewModel.onChangeCity(newValue);
+                      },
                       decoration: InputDecoration(
                           focusColor: AppColors.appBlue,
                           hintText: Strings.city,
@@ -217,14 +231,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0),)
                       )
                     ),
-                  ),
+                  //),
                   SizedBox(height: 13,),
                   TextFormField(
+                      maxLength: 2,
+                      key: ValueKey(ExchangeBooksValueKey.provinceTextFieldRegister),
                       autocorrect: false,
-                      enabled: false,
+                      textInputAction: TextInputAction.done,
+                      onEditingComplete: () => _node.unfocus(),
+                      //enabled: false,
+                      onChanged: (newValue) {
+                        viewModel.onChangeProvince(newValue);
+                      },
                       controller: viewModel.provinceController,
                       style: AppStyles.blackTextStyle,
                       decoration: InputDecoration(
+                          counter: SizedBox(),
                           focusColor: AppColors.appBlue,
                           hintText: Strings.province,
                           hintStyle: AppStyles.greyTextStyle,
@@ -233,6 +255,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> with WidgetsBin
                   ),
                   SizedBox(height: 25,),
                   AppButton(
+                    key: ValueKey(ExchangeBooksValueKey.goButtonRegister),
                     text: Strings.register,
                     enabled: viewModel.enableRegisterButton,
                     onPressed: () {

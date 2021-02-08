@@ -15,7 +15,7 @@ class AppIconButton extends StatelessWidget {
   final IconData icon;
 
 
-  AppIconButton({this.text, this.onPressed, this.margin = EdgeInsets.zero, this.enabled = true, this.small = false, this.smallWidth = smallButtonSize, this.icon});
+  AppIconButton({this.text, this.onPressed, this.margin = EdgeInsets.zero, this.enabled = true, this.small = false, this.smallWidth = smallButtonSize, this.icon, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

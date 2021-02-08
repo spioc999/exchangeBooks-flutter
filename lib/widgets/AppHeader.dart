@@ -1,6 +1,7 @@
 import 'package:exchange_books/helpers/ImageHelper.dart';
 import 'package:exchange_books/routes/Routes.dart';
 import 'package:exchange_books/values/AppColors.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:flutter/material.dart';
 
 class AppHeader extends StatelessWidget {
@@ -64,9 +65,9 @@ class AppHeader extends StatelessWidget {
 
   Widget _createLeftIcon() {
     if(isHomePage){
-      return ImageHelper.getPng("logo_blank_half");
+      return ImageHelper.getPng("logo_blank_half", key: ValueKey(ExchangeBooksValueKey.infoButtonHome));
     }else{
-      return Icon(Icons.arrow_back_ios_rounded, color: AppColors.appBlue,);
+      return Icon(Icons.arrow_back_ios_rounded, color: AppColors.appBlue, key: ValueKey(ExchangeBooksValueKey.back),);
     }
   }
 }

@@ -1,0 +1,969 @@
+@startuml
+set namespaceSeparator ::
+
+class "exchange_books::data_managers::DataManagerUser.dart::DataManagerUser" {
+  +Future login()
+  +Future registerNewUser()
+  +Future getCurrentUser()
+  +Future saveCurrentUser()
+  +Future getSavedEmail()
+  +Future saveEmail()
+  +Future getSavedPassword()
+  +Future savePassword()
+  +Future getBearerToken()
+  +Future saveBearerToken()
+  +Future logout()
+}
+
+class "exchange_books::data_managers::DataManagerError.dart::DataManagerError" {
+  +String errorType
+  +String message
+  +int status
+  +bool isHttp
+  {static} +String ERR_CACHE
+  {static} +String ERR_CACHE_WRITE
+  {static} +String ERR_CACHE_DELETE
+}
+
+class "exchange_books::data_managers::DataManagerResponse.dart::DataManagerResponse<T>" {
+  +T response
+  +DataManagerError error
+  +bool hasError()
+  +bool hasHttpError()
+}
+
+"exchange_books::data_managers::DataManagerResponse.dart::DataManagerResponse<T>" o-- "exchange_books::data_managers::DataManagerError.dart::DataManagerError"
+
+class "exchange_books::data_managers::DataManager.dart::DataManager" {
+  -DataManagerUser _managerUser
+  -DataManagerBook _managerBook
+  +DataManagerUser managerUser
+  +DataManagerBook managerBook
+}
+
+"exchange_books::data_managers::DataManager.dart::DataManager" o-- "exchange_books::data_managers::DataManagerUser.dart::DataManagerUser"
+"exchange_books::data_managers::DataManager.dart::DataManager" o-- "exchange_books::data_managers::DataManagerBook.dart::DataManagerBook"
+
+class "exchange_books::data_managers::DataManagerBook.dart::DataManagerBook" {
+  +Future getBooksDetailsByIsbn()
+  +Future addNewBook()
+  +Future getBooks()
+  +Future deleteBook()
+  +Future updateBookStatus()
+  +Future searchBooks()
+}
+
+class "exchange_books::network::interceptors::AddBodyInterceptor.dart::AddBodyInterceptor" {
+  -dynamic _body
+  +Future onRequest()
+}
+
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::AddBodyInterceptor.dart::AddBodyInterceptor"
+
+class "exchange_books::network::interceptors::UnauthorizedCallsInterceptor.dart::UnauthorizedCallsInterceptor" {
+  -String _clientId
+  -String _clientSecret
+  +Future onRequest()
+  +String buildBasicAuth()
+}
+
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::UnauthorizedCallsInterceptor.dart::UnauthorizedCallsInterceptor"
+
+class "exchange_books::network::interceptors::AddQueryParamsInterceptor.dart::AddQueryParamsInterceptor" {
+  -Map<String, dynamic> _myParams
+  +Future onRequest()
+}
+
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::AddQueryParamsInterceptor.dart::AddQueryParamsInterceptor"
+
+class "exchange_books::network::interceptors::BaseOptionsInterceptor.dart::BaseOptionsInterceptor" {
+  -String _baseUrl
+  +Future onRequest()
+}
+
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::BaseOptionsInterceptor.dart::BaseOptionsInterceptor"
+
+class "exchange_books::network::interceptors::LoggerInterceptor.dart::LoggerInterceptor" {
+  +bool request
+  +bool requestHeader
+  +bool requestBody
+  +bool responseBody
+  +bool responseHeader
+  +bool error
+  {static} +int initialTab
+  {static} +String tabStep
+  +bool compact
+  +int maxWidth
+  +void Function(Object) logPrint
+  +Future onRequest()
+  +Future onError()
+  +Future onResponse()
+  -void _printBoxed()
+  -void _printResponse()
+  -void _printResponseHeader()
+  -void _printRequestHeader()
+  -void _printLine()
+  -void _printKV()
+  -void _printBlock()
+  -String _indent()
+  -void _printPrettyMap()
+  -void _printList()
+  -bool _canFlattenMap()
+  -bool _canFlattenList()
+  -void _printMapAsTable()
+  {static} +void debug()
+}
+
+"exchange_books::network::interceptors::LoggerInterceptor.dart::LoggerInterceptor" o-- "exchange_books::network::interceptors::LoggerInterceptor.dart::void Function(Object)"
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::LoggerInterceptor.dart::LoggerInterceptor"
+
+class "exchange_books::network::interceptors::InterceptorFactory.dart::InterceptorFactory" {
+  {static} +Interceptor createLoggerInterceptor()
+  {static} +Interceptor createAuthorizedCallsInterceptor()
+  {static} +Interceptor createUnautorizedCallsInterceptor()
+  {static} +Interceptor createAddHeadersInterceptors()
+  {static} +Interceptor createAddBodyInterceptors()
+  {static} +Interceptor createAddQueryParamsInterceptors()
+}
+
+class "exchange_books::network::interceptors::InterceptorSetter.dart::InterceptorSetter" {
+  {static} +void setInterceptors()
+}
+
+class "exchange_books::network::interceptors::AddHeadersInterceptor.dart::AddHeadersInterceptor" {
+  -Map<String, dynamic> _myHeaders
+  +Future onRequest()
+}
+
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::AddHeadersInterceptor.dart::AddHeadersInterceptor"
+
+class "exchange_books::network::interceptors::AuthorizedCallsInterceptor.dart::AuthorizedCallsInterceptor" {
+  -String _authorization
+  +Dio apiClient
+  +Future onRequest()
+  +Future onError()
+}
+
+"exchange_books::network::interceptors::AuthorizedCallsInterceptor.dart::AuthorizedCallsInterceptor" o-- "dio::src::dio.dart::Dio"
+"dio::src::interceptor.dart::Interceptor" <|-- "exchange_books::network::interceptors::AuthorizedCallsInterceptor.dart::AuthorizedCallsInterceptor"
+
+class "exchange_books::network::modelsUsers::RegistrationBody.dart::RegistrationBody" {
+  +String username
+  +String psw
+  +String email
+  +String lastName
+  +String firstName
+  +String city
+  +String province
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsUsers::LoginResponse.dart::LoginResponse" {
+  +LoginResult result
+  +Map toJson()
+}
+
+"exchange_books::network::modelsUsers::LoginResponse.dart::LoginResponse" o-- "exchange_books::network::modelsUsers::LoginResult.dart::LoginResult"
+"exchange_books::base::BaseResponse.dart::BaseResponse" <|-- "exchange_books::network::modelsUsers::LoginResponse.dart::LoginResponse"
+
+class "exchange_books::network::modelsUsers::LoginBody.dart::LoginBody" {
+  +String email
+  +String psw
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsUsers::LoginResult.dart::LoginResult" {
+  +String bearerToken
+  +User user
+  +Map toJson()
+}
+
+"exchange_books::network::modelsUsers::LoginResult.dart::LoginResult" o-- "exchange_books::models::User.dart::User"
+
+class "exchange_books::network::ExchangeBooksException.dart::ExchangeBooksException" {
+  +int code
+  +String message
+  +bool isHttp
+  +Exception innerException
+  +StackTrace stackTrace
+  +String toString()
+}
+
+"dart::core::Exception" <|-- "exchange_books::network::ExchangeBooksException.dart::ExchangeBooksException"
+
+class "exchange_books::network::modelsBooks::SearchBooksResponse.dart::SearchBooksResponse" {
+  +List<SearchBooksResult> result
+  +Map toJson()
+}
+
+"exchange_books::base::BaseResponse.dart::BaseResponse" <|-- "exchange_books::network::modelsBooks::SearchBooksResponse.dart::SearchBooksResponse"
+
+class "exchange_books::network::modelsBooks::BooksDetailsResponse.dart::BooksDetailsResponse" {
+  +BooksDetailsResult result
+  +Map toJson()
+}
+
+"exchange_books::network::modelsBooks::BooksDetailsResponse.dart::BooksDetailsResponse" o-- "exchange_books::network::modelsBooks::BooksDetailsResult.dart::BooksDetailsResult"
+"exchange_books::base::BaseResponse.dart::BaseResponse" <|-- "exchange_books::network::modelsBooks::BooksDetailsResponse.dart::BooksDetailsResponse"
+
+class "exchange_books::network::modelsBooks::SearchBooksResult.dart::SearchBooksResult" {
+  +String username
+  +String email
+  +String lastName
+  +String firstName
+  +String city
+  +String isbn
+  +String title
+  +String authors
+  +String publishedDate
+  +String thumbnailLink
+  +int bookStatus
+  +String note
+  +DateTime dateInsertion
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsBooks::BooksDetailsResult.dart::BooksDetailsResult" {
+  +int id
+  +String isbn
+  +String title
+  +String authors
+  +String publishedDate
+  +String thumbnailLink
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsBooks::GetBooksResult.dart::GetBooksResult" {
+  +int id
+  +String isbn
+  +String title
+  +String authors
+  +String publishedDate
+  +String thumbnailLink
+  +int bookStatus
+  +String note
+  +DateTime dateInsertion
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsBooks::AddBookBody.dart::AddBookBody" {
+  +int idBook
+  +String note
+  +Map toJson()
+}
+
+class "exchange_books::network::modelsBooks::GetBooksResponse.dart::GetBooksResponse" {
+  +List<GetBooksResult> result
+  +Map toJson()
+}
+
+"exchange_books::base::BaseResponse.dart::BaseResponse" <|-- "exchange_books::network::modelsBooks::GetBooksResponse.dart::GetBooksResponse"
+
+class "exchange_books::network::modelsBooks::UpdateBookStatusBody.dart::UpdateBookStatusBody" {
+  +int id
+  +int status
+  +Map toJson()
+}
+
+class "exchange_books::network::api::UsersApi.dart::UsersApi" {
+  -String _hostUrl
+  {static} -String _apiUsersPrefix
+  +Future login()
+  +Future registerNewUser()
+}
+
+class "exchange_books::network::api::BooksApi.dart::BooksApi" {
+  -String _hostUrl
+  {static} -String _apiBooksPrefix
+  +Future getBooksDetailsByIsbn()
+  +Future addNewBook()
+  +Future getBooks()
+  +Future deleteBook()
+  +Future updateBookStatus()
+  +Future searchBooks()
+}
+
+class "exchange_books::values::AppStyles.dart::AppStyles" {
+  {static} +TextStyle greyTextStyle
+  {static} +TextStyle blackTextStyle
+  {static} +TextStyle errorTextStyle
+}
+
+"exchange_books::values::AppStyles.dart::AppStyles" o-- "flutter::src::painting::text_style.dart::TextStyle"
+
+class "exchange_books::values::HttpConstants.dart::HttpConstants" {
+  {static} +String headerUserAgent
+  {static} +String headerUserAgentValue
+  {static} +String headerAccept
+  {static} +String headerAcceptValue
+  {static} +String authorizationHeader
+  {static} +String basic
+  {static} +String bearer
+  {static} +int defaultExceptionErrorCode
+}
+
+class "exchange_books::values::StorageKeys.dart::StorageKeys" {
+  {static} +String EMAIL
+  {static} +String PASSWORD
+  {static} +String BEARER_TOKEN
+  {static} +String USER
+}
+
+class "exchange_books::values::AppValidators.dart::AppValidators" {
+  {static} +RegExp emailValidator
+  {static} +RegExp pswValidator
+  {static} +RegExp isbnValidator
+}
+
+class "exchange_books::values::AppColors.dart::AppColors" {
+  {static} +Color appBlue
+  {static} +Color primaryText
+}
+
+"exchange_books::values::AppColors.dart::AppColors" o-- "dart::ui::Color"
+
+class "exchange_books::values::Strings.dart::Strings" {
+  {static} +String ok
+  {static} +String noConnectivityTitle
+  {static} +String noConnectivityMessage
+  {static} +String genericHttpErrorTitle
+  {static} +String genericHttpErrorMessage
+  {static} +String initialsSPC
+  {static} +String email
+  {static} +String password
+  {static} +String login
+  {static} +String rememberMe
+  {static} +String singIn
+  {static} +String register
+  {static} +String registrationTitle
+  {static} +String invalidCredentials
+  {static} +String insertCorrectCredentials
+  {static} +String insertValidEmail
+  {static} +String error
+  {static} +String genericErrorMessage
+  {static} +String firstName
+  {static} +String lastName
+  {static} +String repeatPassword
+  {static} +String errorRepeatPassword
+  {static} +String suggestionPassword
+  {static} +String insertValidPassword
+  {static} +String username
+  {static} +String usernameError
+  {static} +String city
+  {static} +String province
+  {static} +String registrationCompleted
+  {static} +String operationCompleted
+  {static} +String search
+  {static} +String noResults
+  {static} +String available
+  {static} +String inTalks
+  {static} +String notAvaliable
+  {static} +String booksInNearby
+  {static} +String createdBy
+  {static} +String isbn
+  {static} +String authors
+  {static} +String publishedYear
+  {static} +String notes
+  {static} +String yourNotes
+  {static} +String status
+  {static} +String owner
+  {static} +String nameAndSurname
+  {static} +String whereLives
+  {static} +String whereYouLive
+  {static} +String whenInserted
+  {static} +String atTime
+  {static} +String contact
+  {static} +String searchYourCity
+  {static} +String addNewBook
+  {static} +String suggestionIsbn
+  {static} +String errorIsbnText
+  {static} +String errorHttpIsbnText
+  {static} +String errorNotesText
+  {static} +String back
+  {static} +String infoAboutBook
+  {static} +String title
+  {static} +String insertNotes
+  {static} +String add
+  {static} +String logout
+  {static} +String hi
+  {static} +String yourData
+  {static} +String yourBooks
+  {static} +String noBooksYet
+  {static} +String inserted
+  {static} +String whenYouInserted
+  {static} +String editStatus
+  {static} +String deleteInsertion
+  {static} +String selectNewStatus
+  {static} +String doYouReallyWantToDelete
+  {static} +String no
+  {static} +String yes
+}
+
+class "exchange_books::models::User.dart::User" {
+  +String username
+  +String email
+  +String lastName
+  +String firstName
+  +String city
+  +String province
+  +Map toJson()
+}
+
+class "exchange_books::models::AppAlertModel.dart::AlertType" {
+  +int index
+  {static} +List<AlertType> values
+  {static} +AlertType error
+  {static} +AlertType info
+}
+
+"exchange_books::models::AppAlertModel.dart::AlertType" o-- "exchange_books::models::AppAlertModel.dart::AlertType"
+
+class "exchange_books::models::AppAlertModel.dart::AppAlertModel" {
+  +dynamic title
+  +dynamic message
+  +AlertType type
+  +void Function() onClose
+}
+
+"exchange_books::models::AppAlertModel.dart::AppAlertModel" o-- "exchange_books::models::AppAlertModel.dart::AlertType"
+"exchange_books::models::AppAlertModel.dart::AppAlertModel" o-- "dart::ui::void Function()"
+
+class "exchange_books::models::DetailsBookScreenModel.dart::DetailsBookScreenModel" {
+  +bool isOwned
+  +String imageLink
+  +String title
+  +String authors
+  +String publishedDate
+  +String city
+  +int bookStatus
+  +String isbn
+  +String note
+  +DateTime dateInsertion
+  +String username
+  +String email
+  +String lastName
+  +String firstName
+  +int id
+}
+
+class "exchange_books::ExchangeBooksApp.dart::ExchangeBooksApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::ExchangeBooksApp.dart::ExchangeBooksApp"
+
+class "exchange_books::pages::home::HomeScreen.dart::HomeScreen" {
+  +_HomeScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::home::HomeScreen.dart::HomeScreen"
+
+class "exchange_books::pages::home::HomeScreen.dart::_HomeScreenState" {
+  +HomeViewModel viewModel
+  +void initState()
+  +Widget build()
+  -Widget _buildBooksList()
+}
+
+"exchange_books::pages::home::HomeScreen.dart::_HomeScreenState" o-- "exchange_books::pages::home::HomeViewModel.dart::HomeViewModel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::home::HomeScreen.dart::_HomeScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::home::HomeScreen.dart::_HomeScreenState"
+
+class "exchange_books::pages::home::HomeViewModel.dart::HomeViewModel" {
+  +dynamic name
+  +dynamic province
+  +dynamic filter
+  +List<SearchBooksResult> books
+  +List<SearchBooksResult> filteredBooks
+  +dynamic version
+  +TextEditingController searchController
+  +Future init()
+  +void onChangeFilter()
+  -void _filterBooks()
+  +Future getVersion()
+  +void onClickBook()
+  +void onPressAdd()
+  +void onPressUser()
+}
+
+"exchange_books::pages::home::HomeViewModel.dart::HomeViewModel" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::home::HomeViewModel.dart::HomeViewModel"
+
+class "exchange_books::pages::registration::RegistrationScreen.dart::RegistrationScreen" {
+  +_RegistrationScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::registration::RegistrationScreen.dart::RegistrationScreen"
+
+class "exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState" {
+  +RegistrationViewModel viewModel
+  -FocusScopeNode _node
+  -GlobalKey<FormState> _registrationKey
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState" o-- "exchange_books::pages::registration::RegistrationViewModel.dart::RegistrationViewModel"
+"exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState" o-- "flutter::src::widgets::focus_manager.dart::FocusScopeNode"
+"exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::registration::RegistrationScreen.dart::_RegistrationScreenState"
+
+class "exchange_books::pages::registration::RegistrationViewModel.dart::RegistrationViewModel" {
+  +dynamic username
+  +dynamic email
+  +dynamic psw
+  +dynamic repeatPsw
+  +dynamic lastName
+  +dynamic firstName
+  +dynamic city
+  +dynamic province
+  +bool obscurePassword
+  +bool obscureRepeatPassword
+  +bool autovalidate
+  +TextEditingController firstNameController
+  +TextEditingController lastNameController
+  +TextEditingController usernameController
+  +TextEditingController emailController
+  +TextEditingController pswController
+  +TextEditingController repeatPswController
+  +TextEditingController capController
+  +TextEditingController cityController
+  +TextEditingController provinceController
+  +bool enableRegisterButton
+  +void init()
+  +void onChangeFirstName()
+  +void onChangeLastName()
+  +void onChangeUsername()
+  +void onChangeEmail()
+  +void onChangePsw()
+  +void onChangeRepeatPsw()
+  +void toggleObscurePassword()
+  +void toggleObscureRepeatPassword()
+  +dynamic validateEmail()
+  +dynamic validatePsw()
+  +dynamic validateRepeatPsw()
+  +dynamic validateUsername()
+  +void onClickRegister()
+  +dynamic showPlaces()
+}
+
+"exchange_books::pages::registration::RegistrationViewModel.dart::RegistrationViewModel" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::registration::RegistrationViewModel.dart::RegistrationViewModel"
+
+class "exchange_books::pages::splash::SplashViewModel.dart::SplashViewModel" {
+  +void init()
+}
+
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::splash::SplashViewModel.dart::SplashViewModel"
+
+class "exchange_books::pages::splash::SplashScreen.dart::SplashScreen" {
+  +_SplashScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::splash::SplashScreen.dart::SplashScreen"
+
+class "exchange_books::pages::splash::SplashScreen.dart::_SplashScreenState" {
+  +SplashViewModel viewModel
+  +void initState()
+  +Widget build()
+}
+
+"exchange_books::pages::splash::SplashScreen.dart::_SplashScreenState" o-- "exchange_books::pages::splash::SplashViewModel.dart::SplashViewModel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::splash::SplashScreen.dart::_SplashScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::splash::SplashScreen.dart::_SplashScreenState"
+
+class "exchange_books::pages::user::UserScreen.dart::UserScreen" {
+  +_UserScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::user::UserScreen.dart::UserScreen"
+
+class "exchange_books::pages::user::UserScreen.dart::_UserScreenState" {
+  +UserViewModel viewModel
+  +void initState()
+  +Widget build()
+  -Widget _getWelcomeText()
+  -Widget _getDataCard()
+  -Widget _getMyBooksTitle()
+  -Widget _buildBooksList()
+}
+
+"exchange_books::pages::user::UserScreen.dart::_UserScreenState" o-- "exchange_books::pages::user::UserViewModel.dart::UserViewModel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::user::UserScreen.dart::_UserScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::user::UserScreen.dart::_UserScreenState"
+
+class "exchange_books::pages::user::UserViewModel.dart::UserViewModel" {
+  +User user
+  +List<GetBooksResult> myBooks
+  +Future init()
+  +void onPressLogout()
+  +void onClickBook()
+}
+
+"exchange_books::pages::user::UserViewModel.dart::UserViewModel" o-- "exchange_books::models::User.dart::User"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::user::UserViewModel.dart::UserViewModel"
+
+class "exchange_books::pages::details_book::DetailsBookViewModel.dart::DetailsBookViewModel" {
+  +DetailsBookScreenModel model
+  +List<Widget> bookStatuses
+  +void init()
+  +void onEditClicked()
+  +void onDeleteClicked()
+  +void contactUser()
+  -Widget _createWidgetByStatusId()
+  +void setBookStatus()
+  +void deleteBook()
+}
+
+"exchange_books::pages::details_book::DetailsBookViewModel.dart::DetailsBookViewModel" o-- "exchange_books::models::DetailsBookScreenModel.dart::DetailsBookScreenModel"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::details_book::DetailsBookViewModel.dart::DetailsBookViewModel"
+
+class "exchange_books::pages::details_book::DetailsBookScreen.dart::DetailsBookScreen" {
+  +_DetailsBookScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::details_book::DetailsBookScreen.dart::DetailsBookScreen"
+
+class "exchange_books::pages::details_book::DetailsBookScreen.dart::_DetailsBookScreenState" {
+  +DetailsBookViewModel viewModel
+  +void initState()
+  +Widget build()
+  -Widget _createAvaliabilityIndicator()
+}
+
+"exchange_books::pages::details_book::DetailsBookScreen.dart::_DetailsBookScreenState" o-- "exchange_books::pages::details_book::DetailsBookViewModel.dart::DetailsBookViewModel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::details_book::DetailsBookScreen.dart::_DetailsBookScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::details_book::DetailsBookScreen.dart::_DetailsBookScreenState"
+
+class "exchange_books::pages::login::LoginViewModel.dart::LoginViewModel" {
+  +dynamic email
+  +dynamic psw
+  +bool rememberMe
+  +bool obscurePassword
+  +bool autovalidate
+  +TextEditingController pswController
+  +TextEditingController emailController
+  +bool enableLogin
+  +void init()
+  +void onClickSignIn()
+  +void onChangeEmail()
+  +void onChangePassword()
+  +void onChangeRememberMe()
+  +dynamic validateEmail()
+  +void toggleObscurePassword()
+  +void goToRegister()
+}
+
+"exchange_books::pages::login::LoginViewModel.dart::LoginViewModel" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::login::LoginViewModel.dart::LoginViewModel"
+
+class "exchange_books::pages::login::LoginScreen.dart::LoginScreen" {
+  +_LoginScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::login::LoginScreen.dart::LoginScreen"
+
+class "exchange_books::pages::login::LoginScreen.dart::_LoginScreenState" {
+  +LoginViewModel viewModel
+  -FocusScopeNode _node
+  -GlobalKey<FormState> _loginKey
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"exchange_books::pages::login::LoginScreen.dart::_LoginScreenState" o-- "exchange_books::pages::login::LoginViewModel.dart::LoginViewModel"
+"exchange_books::pages::login::LoginScreen.dart::_LoginScreenState" o-- "flutter::src::widgets::focus_manager.dart::FocusScopeNode"
+"exchange_books::pages::login::LoginScreen.dart::_LoginScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::login::LoginScreen.dart::_LoginScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::login::LoginScreen.dart::_LoginScreenState"
+
+class "exchange_books::pages::add_book::AddBookScreen.dart::AddBookScreen" {
+  +_AddBookScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::pages::add_book::AddBookScreen.dart::AddBookScreen"
+
+class "exchange_books::pages::add_book::AddBookScreen.dart::_AddBookScreenState" {
+  +AddBookViewModel viewModel
+  +void initState()
+  +Widget build()
+  -Widget _getImage()
+  -Widget _createInfo()
+}
+
+"exchange_books::pages::add_book::AddBookScreen.dart::_AddBookScreenState" o-- "exchange_books::pages::add_book::AddBookViewModel.dart::AddBookViewModel"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::pages::add_book::AddBookScreen.dart::_AddBookScreenState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::pages::add_book::AddBookScreen.dart::_AddBookScreenState"
+
+class "exchange_books::pages::add_book::AddBookViewModel.dart::AddBookViewModel" {
+  {static} +dynamic NULL_FROM_SCAN
+  +TextEditingController isbnController
+  +TextEditingController notesController
+  +dynamic isbn
+  +bool errorIsbn
+  +bool errorHttpIsbn
+  +BooksDetailsResult bookFound
+  +dynamic notes
+  +void init()
+  +void onChangeIsbn()
+  +void onChangeNotes()
+  +void checkIsbnLength()
+  +bool isValidNote()
+  +void onClickAdd()
+  +void onClickScan()
+  +void getInfoBook()
+}
+
+"exchange_books::pages::add_book::AddBookViewModel.dart::AddBookViewModel" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"exchange_books::pages::add_book::AddBookViewModel.dart::AddBookViewModel" o-- "exchange_books::network::modelsBooks::BooksDetailsResult.dart::BooksDetailsResult"
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" <|-- "exchange_books::pages::add_book::AddBookViewModel.dart::AddBookViewModel"
+
+class "exchange_books::routes::Routes.dart::Routes" {
+  {static} +Sailor sailor
+  {static} +String home
+  {static} +String login
+  {static} +String registration
+  {static} +String detailsBook
+  {static} +String addBook
+  {static} +String user
+  {static} +void createRoutes()
+}
+
+"exchange_books::routes::Routes.dart::Routes" o-- "sailor::src::sailor.dart::Sailor"
+
+class "exchange_books::helpers::ApiHelper.dart::ApiHelper" {
+  {static} +bool isSuccessfulResponse()
+}
+
+class "exchange_books::helpers::ImageHelper.dart::ImageHelper" {
+  {static} +Widget getPng()
+  {static} +Widget getSvg()
+  {static} +Widget getNetworkImage()
+}
+
+class "exchange_books::helpers::DateHelper.dart::DateHelper" {
+  {static} +String getPublishedYear()
+  {static} +String getInsertionDateFormatted()
+}
+
+class "exchange_books::base::BaseViewModel.dart::BaseViewModel" {
+  +bool progress
+  +AppAlertModel alert
+  +dynamic showProgress()
+  +dynamic dismissProgress()
+  +dynamic showAlert()
+  +dynamic hideAlert()
+}
+
+"exchange_books::base::BaseViewModel.dart::BaseViewModel" o-- "exchange_books::models::AppAlertModel.dart::AppAlertModel"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "exchange_books::base::BaseViewModel.dart::BaseViewModel"
+
+class "exchange_books::base::BaseWidget.dart::BaseWidget" {
+  +Widget body
+  +Widget header
+  +double headerHeight
+  +bool progress
+  +AppAlertModel alert
+  +SystemUiOverlayStyle statusBarColor
+  +Color color
+  +bool safeAreaTop
+  +bool safeAreaBottom
+  +Widget floatingActionButton
+  +_BaseWidgetState createState()
+}
+
+"exchange_books::base::BaseWidget.dart::BaseWidget" o-- "flutter::src::widgets::framework.dart::Widget"
+"exchange_books::base::BaseWidget.dart::BaseWidget" o-- "exchange_books::models::AppAlertModel.dart::AppAlertModel"
+"exchange_books::base::BaseWidget.dart::BaseWidget" o-- "flutter::src::services::system_chrome.dart::SystemUiOverlayStyle"
+"exchange_books::base::BaseWidget.dart::BaseWidget" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "exchange_books::base::BaseWidget.dart::BaseWidget"
+
+class "exchange_books::base::BaseWidget.dart::_BaseWidgetState" {
+  +void initState()
+  +Widget build()
+  -Widget _buildAlert()
+  -Widget _buildLoader()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "exchange_books::base::BaseWidget.dart::_BaseWidgetState"
+"flutter::src::widgets::binding.dart::WidgetsBindingObserver" <|-- "exchange_books::base::BaseWidget.dart::_BaseWidgetState"
+
+class "exchange_books::base::BaseResponse.dart::BaseResponse" {
+  +int code
+  +String message
+  +Map toJson()
+}
+
+class "exchange_books::widgets::list_items::BookListItem.dart::BookListItemModel" {
+  +dynamic imageLink
+  +dynamic bookName
+  +dynamic authors
+  +dynamic publishedDate
+  +dynamic city
+  +int bookStatus
+  +dynamic isbn
+}
+
+class "exchange_books::widgets::list_items::BookListItem.dart::BookListItem" {
+  -BookListItemModel _model
+  -void Function() _onClick
+  +Widget build()
+  -Widget _createAvaliabilityIndicator()
+}
+
+"exchange_books::widgets::list_items::BookListItem.dart::BookListItem" o-- "exchange_books::widgets::list_items::BookListItem.dart::BookListItemModel"
+"exchange_books::widgets::list_items::BookListItem.dart::BookListItem" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::list_items::BookListItem.dart::BookListItem"
+
+class "exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItemModel" {
+  +dynamic imageLink
+  +dynamic bookName
+  +int bookStatus
+  +dynamic isbn
+  +DateTime insertionDate
+}
+
+class "exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItem" {
+  -MyBookListItemModel _model
+  -void Function() _onClick
+  +Widget build()
+  -Widget _createAvaliabilityIndicator()
+}
+
+"exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItem" o-- "exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItemModel"
+"exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItem" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::list_items::MyBookListItem.dart::MyBookListItem"
+
+class "exchange_books::widgets::button::AppButton.dart::AppButton" {
+  {static} +double smallButtonSize
+  +dynamic text
+  +void Function() onPressed
+  +bool enabled
+  +bool small
+  +double smallWidth
+  +EdgeInsets margin
+  +Widget build()
+}
+
+"exchange_books::widgets::button::AppButton.dart::AppButton" o-- "dart::ui::void Function()"
+"exchange_books::widgets::button::AppButton.dart::AppButton" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::button::AppButton.dart::AppButton"
+
+class "exchange_books::widgets::button::OutlineAppHeaderIconButton.dart::OutlineAppHeaderIconButton" {
+  {static} +double smallButtonSize
+  +void Function() onPressed
+  +dynamic text
+  +bool small
+  +double smallWidth
+  +EdgeInsets margin
+  +IconData iconData
+  +Widget build()
+}
+
+"exchange_books::widgets::button::OutlineAppHeaderIconButton.dart::OutlineAppHeaderIconButton" o-- "dart::ui::void Function()"
+"exchange_books::widgets::button::OutlineAppHeaderIconButton.dart::OutlineAppHeaderIconButton" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"exchange_books::widgets::button::OutlineAppHeaderIconButton.dart::OutlineAppHeaderIconButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::button::OutlineAppHeaderIconButton.dart::OutlineAppHeaderIconButton"
+
+class "exchange_books::widgets::button::OutlineAppButton.dart::OutlineAppButton" {
+  {static} +double smallButtonSize
+  +void Function() onPressed
+  +dynamic text
+  +bool small
+  +double smallWidth
+  +EdgeInsets margin
+  +Widget build()
+}
+
+"exchange_books::widgets::button::OutlineAppButton.dart::OutlineAppButton" o-- "dart::ui::void Function()"
+"exchange_books::widgets::button::OutlineAppButton.dart::OutlineAppButton" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::button::OutlineAppButton.dart::OutlineAppButton"
+
+class "exchange_books::widgets::button::AppIconButton.dart::AppIconButton" {
+  {static} +double smallButtonSize
+  +dynamic text
+  +void Function() onPressed
+  +bool enabled
+  +bool small
+  +double smallWidth
+  +EdgeInsets margin
+  +IconData icon
+  +Widget build()
+}
+
+"exchange_books::widgets::button::AppIconButton.dart::AppIconButton" o-- "dart::ui::void Function()"
+"exchange_books::widgets::button::AppIconButton.dart::AppIconButton" o-- "flutter::src::painting::edge_insets.dart::EdgeInsets"
+"exchange_books::widgets::button::AppIconButton.dart::AppIconButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::button::AppIconButton.dart::AppIconButton"
+
+class "exchange_books::widgets::AppHeader.dart::AppHeader" {
+  +bool isHomePage
+  +Widget rightWidget
+  +void Function() onLeftIconPressed
+  +Widget build()
+  -Widget _createRightWidget()
+  -Widget _createLeftIcon()
+}
+
+"exchange_books::widgets::AppHeader.dart::AppHeader" o-- "flutter::src::widgets::framework.dart::Widget"
+"exchange_books::widgets::AppHeader.dart::AppHeader" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::AppHeader.dart::AppHeader"
+
+class "exchange_books::widgets::SafeAreScrollView.dart::SafeAreaScrollView" {
+  +Widget child
+  +bool shouldSroll
+  +Widget build()
+}
+
+"exchange_books::widgets::SafeAreScrollView.dart::SafeAreaScrollView" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::SafeAreScrollView.dart::SafeAreaScrollView"
+
+class "exchange_books::widgets::text::BoldText.dart::BoldText" {
+  +dynamic text
+  +double fontSize
+  +Color color
+  +TextAlign align
+  +int maxLines
+  +TextOverflow overflow
+  +bool autoResize
+  +Widget build()
+}
+
+"exchange_books::widgets::text::BoldText.dart::BoldText" o-- "dart::ui::Color"
+"exchange_books::widgets::text::BoldText.dart::BoldText" o-- "dart::ui::TextAlign"
+"exchange_books::widgets::text::BoldText.dart::BoldText" o-- "flutter::src::rendering::paragraph.dart::TextOverflow"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::text::BoldText.dart::BoldText"
+
+class "exchange_books::widgets::text::RegularText.dart::RegularText" {
+  +dynamic text
+  +double fontSize
+  +Color color
+  +TextAlign align
+  +int maxLines
+  +TextOverflow overflow
+  +bool autoResize
+  +Widget build()
+}
+
+"exchange_books::widgets::text::RegularText.dart::RegularText" o-- "dart::ui::Color"
+"exchange_books::widgets::text::RegularText.dart::RegularText" o-- "dart::ui::TextAlign"
+"exchange_books::widgets::text::RegularText.dart::RegularText" o-- "flutter::src::rendering::paragraph.dart::TextOverflow"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "exchange_books::widgets::text::RegularText.dart::RegularText"
+
+class "exchange_books::AppConfig.dart::AppConfig" {
+  +dynamic appName
+  +dynamic apiHostUrl
+  +dynamic clientId
+  +dynamic clientSecret
+  +dynamic googleApiKey
+  +bool updateShouldNotify()
+  {static} +AppConfig of()
+}
+
+"flutter::src::widgets::framework.dart::InheritedWidget" <|-- "exchange_books::AppConfig.dart::AppConfig"
+
+
+@enduml

@@ -3,6 +3,7 @@ import 'package:exchange_books/helpers/ImageHelper.dart';
 import 'package:exchange_books/pages/login/LoginViewModel.dart';
 import 'package:exchange_books/values/AppColors.dart';
 import 'package:exchange_books/values/AppStyles.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/SafeAreScrollView.dart';
 import 'package:exchange_books/widgets/button/AppButton.dart';
@@ -69,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver{
                   BoldText(Strings.login, fontSize: 25,),
                   SizedBox(height: 15,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.emailTextFieldLogin),
                     autocorrect: false,
                     controller: viewModel.emailController,
                     style: AppStyles.blackTextStyle,
@@ -91,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver{
                   ),
                   SizedBox(height: 10,),
                   TextFormField(
+                    key: ValueKey(ExchangeBooksValueKey.passwordTextFieldLogin),
                     controller: viewModel.pswController,
                     obscureText: viewModel.obscurePassword,
                     textInputAction: TextInputAction.done,
@@ -101,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver{
                     decoration: InputDecoration(
                       focusColor: AppColors.appBlue,
                       suffixIcon: InkWell(
-                        child: Icon(viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off),
+                        child: Icon(viewModel.obscurePassword ? Icons.visibility : Icons.visibility_off, key: ValueKey(ExchangeBooksValueKey.showPasswordButtonLogin),),
                         onTap: () {viewModel.toggleObscurePassword();},
                       ),
                       hintText: Strings.password,
@@ -128,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver{
                   ),
                   SizedBox(height: 10,),
                   AppButton(
+                    key: ValueKey(ExchangeBooksValueKey.loginButton),
                     text: Strings.singIn,
                     enabled: viewModel.enableLogin,
                     onPressed: () {
@@ -137,6 +141,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver{
                   ),
                   SizedBox(height: 10,),
                   InkWell(
+                    key: ValueKey(ExchangeBooksValueKey.registerButton),
                     child: Padding(
                       padding: EdgeInsets.all(7),
                       child: BoldText(

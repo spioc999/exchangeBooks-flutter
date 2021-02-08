@@ -4,6 +4,7 @@ import 'package:exchange_books/data_managers/DataManager.dart';
 import 'package:exchange_books/models/AppAlertModel.dart';
 import 'package:exchange_books/models/DetailsBookScreenModel.dart';
 import 'package:exchange_books/routes/Routes.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/button/AppButton.dart';
 import 'package:exchange_books/widgets/button/OutlineAppButton.dart';
@@ -56,6 +57,7 @@ class DetailsBookViewModel extends BaseViewModel{
                   itemCount: bookStatusesToShow.length,
                   itemBuilder: (context, index) {
                     return Column(
+                      key: ValueKey(ExchangeBooksValueKey.editOptionButtonDetails + "_$index"),
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -92,12 +94,14 @@ class DetailsBookViewModel extends BaseViewModel{
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     OutlineAppButton(
+                      key: ValueKey(ExchangeBooksValueKey.noButtonDetails),
                       text: Strings.no,
                       small: true,
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                     SizedBox(width: 10,),
                     AppButton(
+                      key: ValueKey(ExchangeBooksValueKey.yesButtonDetails),
                       text: Strings.yes,
                       small: true,
                       onPressed: () => deleteBook(context),

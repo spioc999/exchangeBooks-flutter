@@ -12,7 +12,7 @@ class OutlineAppHeaderIconButton extends StatelessWidget {
   final EdgeInsets margin;
   final IconData iconData;
 
-  OutlineAppHeaderIconButton({this.onPressed, this.text,this.small = false, this.smallWidth = smallButtonSize, this.margin = EdgeInsets.zero, this.iconData = Icons.account_circle_outlined});
+  OutlineAppHeaderIconButton({this.onPressed, this.text,this.small = false, this.smallWidth = smallButtonSize, this.margin = EdgeInsets.zero, this.iconData = Icons.account_circle_outlined, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

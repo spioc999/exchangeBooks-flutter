@@ -4,6 +4,7 @@ import 'package:exchange_books/data_managers/DataManager.dart';
 import 'package:exchange_books/models/AppAlertModel.dart';
 import 'package:exchange_books/routes/Routes.dart';
 import 'package:exchange_books/values/AppValidators.dart';
+import 'package:exchange_books/values/ExchangeBooksValueKey.dart';
 import 'package:exchange_books/values/Strings.dart';
 import 'package:exchange_books/widgets/text/BoldText.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,16 @@ class RegistrationViewModel extends BaseViewModel{
 
   void toggleObscureRepeatPassword() {
     this.obscureRepeatPassword = !this.obscureRepeatPassword;
+    notifyListeners();
+  }
+
+  void onChangeCity(String newValue) {
+    this.city = newValue;
+    notifyListeners();
+  }
+
+  void onChangeProvince(String newValue) {
+    this.province = newValue.toUpperCase();
     notifyListeners();
   }
 
@@ -156,6 +167,7 @@ class RegistrationViewModel extends BaseViewModel{
             return WillPopScope(
               onWillPop: () async => false,
               child: ListTile(
+                key: ValueKey(ExchangeBooksValueKey.registerCompleted),
                 contentPadding: EdgeInsets.only(bottom: 16, right: 16, left: 16),
                 leading: Icon(Icons.check_circle, color: Colors.green,),
                 title: BoldText(Strings.registrationCompleted),

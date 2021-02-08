@@ -17,7 +17,7 @@ class RegularText extends StatelessWidget {
         this.align,
         this.maxLines,
         this.overflow,
-        this.autoResize = false,});
+        this.autoResize = false, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

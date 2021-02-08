@@ -45,10 +45,12 @@ dependencies:
   flutter_svg: ^0.19.0
   flutter_barcode_scanner: ^1.0.1
   flutter_dotenv: ^3.1.0
+  mockito: ^4.1.4
 
 dev_dependencies:
-  flutter_test:
+  flutter_driver:
     sdk: flutter
+  test: any
   flutter_launcher_icons: ^0.8.1
   flutter_launcher_name: ^0.0.1
 

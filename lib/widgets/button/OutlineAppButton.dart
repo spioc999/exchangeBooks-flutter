@@ -12,7 +12,7 @@ class OutlineAppButton extends StatelessWidget {
   final double smallWidth;
   final EdgeInsets margin;
 
-  OutlineAppButton({this.onPressed, this.text,this.small = false, this.smallWidth = smallButtonSize, this.margin = EdgeInsets.zero});
+  OutlineAppButton({this.onPressed, this.text,this.small = false, this.smallWidth = smallButtonSize, this.margin = EdgeInsets.zero, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

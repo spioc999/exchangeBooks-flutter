@@ -6,7 +6,7 @@ import 'package:exchange_books/network/interceptors/InterceptorFactory.dart';
 class InterceptorSetter {
 
   static void setInterceptors(Dio client, String hostUrl, List<Interceptor> interceptors){
-    client.transformer = FlutterTransformer(); //allow to change req/res data before they are sent
+    //client.transformer = FlutterTransformer(); //json transformation in background
     //setting base options
     client.interceptors.add(BaseOptionsInterceptor(hostUrl));
     client.interceptors.addAll(interceptors);

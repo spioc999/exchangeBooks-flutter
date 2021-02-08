@@ -14,7 +14,13 @@ class AppButton extends StatelessWidget {
   final EdgeInsets margin;
 
 
-  AppButton({this.text, this.onPressed, this.margin = EdgeInsets.zero, this.enabled = true, this.small = false, this.smallWidth = smallButtonSize});
+  AppButton({
+    this.text,
+    this.onPressed,
+    this.margin = EdgeInsets.zero,
+    this.enabled = true,
+    this.small = false,
+    this.smallWidth = smallButtonSize, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
